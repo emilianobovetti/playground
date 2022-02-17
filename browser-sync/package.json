@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "start": "node index.js"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.12"
+  },
+  "license": "UNLICENSED"
+}
