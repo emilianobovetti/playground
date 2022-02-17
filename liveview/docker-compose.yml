@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    volumes:
+      - .:$PWD
+    ports:
+      - 4000:4000
+    depends_on:
+      - postgres
+    working_dir: $PWD
+
+  postgres:
+    image: postgres:11-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
