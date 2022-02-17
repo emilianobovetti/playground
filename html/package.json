@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "start": "node index.js --watch"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.12",
+    "metalsmith": "^2.3.0",
+    "sass": "^1.26.10"
+  },
+  "license": "UNLICENSED"
+}
