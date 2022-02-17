@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  wordpress:
+    depends_on:
+      - mariadb
+    build: .
+    volumes:
+      - ./wordpress:/var/www/html
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    environment:
+      WORDPRESS_DB_HOST: mariadb:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wp-user
+      WORDPRESS_DB_PASSWORD: wp-pass
+
+  mariadb:
+    image: mariadb:10
+    volumes:
+      - mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpwd
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wp-user
+      MYSQL_PASSWORD: wp-pass
+
+volumes:
+  mysql:
