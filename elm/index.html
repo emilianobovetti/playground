@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Elm playground</title>
+</head>
+
+<body>
+
+  <script type="module">
+    import { Elm } from '/src/Main.elm'
+
+    const node = document.createElement('div')
+    document.body.appendChild(node)
+
+    Elm.Main.init({ node })
+  </script>
+</body>
+
+</html>
