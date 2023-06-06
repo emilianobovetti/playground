@@ -1,0 +1,25 @@
+_format_version: '3.0'
+_transform: true
+
+consumers:
+  - username: admin
+    basicauth_credentials:
+      - username: admin
+        password: admin
+
+plugins:
+  - name: basic-auth
+    service: stonk-netcat
+    config:
+      hide_credentials: true
+
+services:
+  - host: stonk-netcat
+    name: stonk-netcat
+    port: 4444
+    protocol: http
+    routes:
+      - name: stonk_route
+        paths:
+          - /stonk-netcat
+        strip_path: true

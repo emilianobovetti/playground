@@ -1,0 +1,5 @@
+FROM alpine
+
+RUN apk add --no-cache netcat-openbsd
+
+CMD while true; do echo -ne 'HTTP/1.0 204 ACCEPTED\r\n\r\n' | nc -N -l -p 4444; done
