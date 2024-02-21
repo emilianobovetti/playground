@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+(
+  cd /usr/local/src/elixir
+  make
+)
+
+exec "/usr/local/src/elixir/bin/$(basename "$0")" "$@"
