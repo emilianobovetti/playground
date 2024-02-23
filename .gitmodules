@@ -1,6 +1,0 @@
-[submodule "arduino/Arduino-Makefile"]
-	path = arduino/Arduino-Makefile
-	url = git@github.com:sudar/Arduino-Makefile.git
-[submodule "elixir-compiler/elixir"]
-	path = elixir-compiler/elixir
-	url = git@github.com:elixir-lang/elixir.git

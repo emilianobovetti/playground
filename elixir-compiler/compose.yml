@@ -3,10 +3,12 @@ version: "3"
 services:
   elixir:
     build: .
-    working_dir: /home/app
+    # working_dir: /home/app/prj
+    working_dir: /usr/local/src/elixir
     volumes:
       - ./elixir:/usr/local/src/elixir
       - ./elixir-from-src:/usr/local/bin/elixir
       - ./elixir-from-src:/usr/local/bin/elixirc
       - ./elixir-from-src:/usr/local/bin/iex
       - ./elixir-from-src:/usr/local/bin/mix
+      - ./prj:/home/app/prj

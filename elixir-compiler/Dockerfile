@@ -19,7 +19,11 @@ RUN set -xe \
       ln -s /usr/local/lib/erlang/bin/$name /usr/local/bin/$name; \
     done \
   && apt-get update \
-  && apt-get install -y --no-install-recommends make libssl3 \
+  && apt-get install -y --no-install-recommends \
+    libssl3 \
+    make \
+    procps \
+    git \
   && groupadd --gid "$GID" app \
   && useradd --create-home --home-dir /home/app --uid "$UID" --gid "$GID" app
 
