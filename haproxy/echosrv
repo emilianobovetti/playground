@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+import { createServer } from 'node:http'
+
+const server = createServer((request, response) => {
+  const chunks = []
+
+  request.on('data', (chunk) => {
+    chunks.push(chunk)
+  })
+
+  request.on('end', () => {
+    const { method, url, headers } = request
+    const body = Buffer.concat(chunks).toString()
+
+    // console.log('*')
+    // console.log('request:', { method, url })
+    // console.log('headers:', headers)
+    // console.log('body:\n', body)
+
+    response.write(body)
+    response.end()
+  })
+})
+
+server.listen(80)
+
+process.on('SIGINT', () => process.exit(0))
+process.on('SIGTERM', () => process.exit(0))

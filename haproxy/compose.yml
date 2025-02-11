@@ -1,0 +1,60 @@
+services:
+  haproxy:
+    container_name: haproxy
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM alpine
+        RUN apk add --no-cache haproxy tini socat
+        COPY haproxy.cfg /etc/haproxy/haproxy.cfg
+    entrypoint: ["/sbin/tini", "--"]
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./haproxy.cfg
+          target: /etc/haproxy/haproxy.cfg
+    command: ["haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-W", "-db"]
+    ports: ["8080:80"]
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - printf '%s\r\n\r\n' 'GET /health HTTP/1.1' | nc 127.0.0.1 80
+      interval: 2s
+      timeout: 2s
+      retries: 3
+
+  echo:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM alpine
+        RUN apk add --no-cache nodejs
+        COPY echosrv /usr/local/bin/echosrv
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./echosrv
+          target: /usr/local/bin/echosrv
+    command: ["/usr/local/bin/echosrv"]
+    deploy:
+      mode: replicated
+      replicas: 4
+    restart: unless-stopped
+
+  spam:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM alpine
+        RUN apk add --no-cache curl tini
+    depends_on:
+      haproxy: { condition: service_healthy }
+    entrypoint: ["/sbin/tini", "--", "/bin/sh", "-c"]
+    command:
+      - |
+        while true; do
+          curl --silent --output /dev/null --data '{}' haproxy:80/graphql
+          sleep 0.5
+        done
+    restart: unless-stopped
