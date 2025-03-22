@@ -1,0 +1,68 @@
+name: playground
+
+x-app-base: &app-base
+  build: app
+  working_dir: /home/app/src
+  volumes:
+    - "$PWD/app:/home/app/src"
+  depends_on:
+    rabbitmq-1: { condition: service_healthy }
+    rabbitmq-2: { condition: service_healthy }
+
+x-rabbitmq-base: &rabbitmq-base
+  build:
+    context: .
+    dockerfile_inline: |
+      FROM rabbitmq:3.13.7-management-alpine
+
+      RUN set -xe \
+        && rabbitmq-plugins enable --offline \
+            rabbitmq_federation \
+            rabbitmq_federation_management
+  environment:
+    RABBITMQ_ERLANG_COOKIE: secret
+  healthcheck:
+    # https://www.rabbitmq.com/docs/monitoring
+    test: ["CMD", "rabbitmq-diagnostics", "-q", "check_running"]
+    interval: 3s
+    timeout: 10s
+    start_period: 20s
+    retries: 3
+  restart: unless-stopped
+
+services:
+  producer:
+    <<: *app-base
+    container_name: producer
+    ports:
+      - 8080:80
+    environment:
+      APP_MODE: producer
+
+  consumer:
+    <<: *app-base
+    container_name: consumer
+    ports:
+      - 8081:80
+    environment:
+      APP_MODE: consumer
+
+  rabbitmq-1:
+    <<: *rabbitmq-base
+    container_name: rabbitmq-1
+    ports:
+      - 15673:15672
+    volumes:
+      - "$PWD/rabbitmq-env.conf:/etc/rabbitmq/rabbitmq-env.conf"
+      - "$PWD/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
+      - "$PWD/def-rabbitmq-1.json:/etc/rabbitmq/definitions.json"
+
+  rabbitmq-2:
+    <<: *rabbitmq-base
+    container_name: rabbitmq-2
+    ports:
+      - 15674:15672
+    volumes:
+      - "$PWD/rabbitmq-env.conf:/etc/rabbitmq/rabbitmq-env.conf"
+      - "$PWD/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf"
+      - "$PWD/def-rabbitmq-2.json:/etc/rabbitmq/definitions.json"

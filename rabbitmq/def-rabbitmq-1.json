@@ -1,0 +1,74 @@
+{
+  "vhosts": [
+    {
+      "name": "domain-x"
+    },
+    {
+      "name": "domain-y"
+    },
+    {
+      "name": "domain-z"
+    }
+  ],
+  "users": [
+    {
+      "name": "guest",
+      "password_hash": "9/1i+jKFRpbTRV1PtRnzFFYibT3cEpP92JeZ8YKGtflf4e/u",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [
+        "administrator"
+      ]
+    }
+  ],
+  "permissions": [
+    {
+      "user": "guest",
+      "vhost": "domain-x",
+      "configure": ".*",
+      "read": ".*",
+      "write": ".*"
+    },
+    {
+      "user": "guest",
+      "vhost": "domain-y",
+      "configure": ".*",
+      "read": ".*",
+      "write": ".*"
+    },
+    {
+      "user": "guest",
+      "vhost": "domain-z",
+      "configure": ".*",
+      "read": ".*",
+      "write": ".*"
+    }
+  ],
+  "exchanges": [
+    {
+      "arguments": {},
+      "auto_delete": false,
+      "durable": true,
+      "name": "gutexberg-input-1",
+      "type": "direct",
+      "vhost": "domain-x"
+    },
+    {
+      "arguments": {},
+      "auto_delete": false,
+      "durable": true,
+      "name": "gutexberg-input-2",
+      "type": "direct",
+      "vhost": "domain-y"
+    },
+    {
+      "arguments": {},
+      "auto_delete": false,
+      "durable": true,
+      "name": "gutexberg-input-3",
+      "type": "direct",
+      "vhost": "domain-z"
+    }
+  ],
+  "queues": [],
+  "bindings": []
+}

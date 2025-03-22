@@ -1,0 +1,242 @@
+{
+  "vhosts": [
+    {
+      "name": "domain-a"
+    },
+    {
+      "name": "domain-b"
+    },
+    {
+      "name": "domain-c"
+    }
+  ],
+  "users": [
+    {
+      "name": "guest",
+      "password_hash": "9/1i+jKFRpbTRV1PtRnzFFYibT3cEpP92JeZ8YKGtflf4e/u",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [
+        "administrator"
+      ]
+    }
+  ],
+  "permissions": [
+    {
+      "user": "guest",
+      "vhost": "domain-a",
+      "configure": ".*",
+      "read": ".*",
+      "write": ".*"
+    },
+    {
+      "user": "guest",
+      "vhost": "domain-b",
+      "configure": ".*",
+      "read": ".*",
+      "write": ".*"
+    },
+    {
+      "user": "guest",
+      "vhost": "domain-c",
+      "configure": ".*",
+      "read": ".*",
+      "write": ".*"
+    }
+  ],
+  "exchanges": [
+    {
+      "arguments": {},
+      "auto_delete": false,
+      "durable": true,
+      "name": "domain-a.gutexberg-input",
+      "type": "direct",
+      "vhost": "domain-a"
+    },
+    {
+      "arguments": {},
+      "auto_delete": false,
+      "durable": true,
+      "name": "domain-a.gutexberg-output",
+      "type": "direct",
+      "vhost": "domain-a"
+    },
+    {
+      "arguments": {},
+      "auto_delete": false,
+      "durable": true,
+      "name": "domain-b.gutexberg-output",
+      "type": "direct",
+      "vhost": "domain-b"
+    },
+    {
+      "arguments": {},
+      "auto_delete": false,
+      "durable": true,
+      "name": "domain-c.gutexberg-output",
+      "type": "direct",
+      "vhost": "domain-c"
+    }
+  ],
+  "parameters": [
+    {
+      "component": "federation-upstream",
+      "name": "rabbitmq-1.domain-x.gutexberg-input-1",
+      "value": {
+        "expires": 3600000,
+        "uri": "amqp://guest:guest@rabbitmq-1:5672/domain-x",
+        "exchange": "gutexberg-input-1"
+      },
+      "vhost": "domain-a"
+    },
+    {
+      "component": "federation-upstream",
+      "name": "rabbitmq-1.domain-y.gutexberg-input-2",
+      "value": {
+        "expires": 3600000,
+        "uri": "amqp://guest:guest@rabbitmq-1:5672/domain-y",
+        "exchange": "gutexberg-input-2"
+      },
+      "vhost": "domain-a"
+    },
+    {
+      "component": "federation-upstream",
+      "name": "rabbitmq-1.domain-z.gutexberg-input-3",
+      "value": {
+        "expires": 3600000,
+        "uri": "amqp://guest:guest@rabbitmq-1:5672/domain-z",
+        "exchange": "gutexberg-input-3"
+      },
+      "vhost": "domain-a"
+    },
+    {
+      "component": "federation-upstream",
+      "name": "local.domain-a.domain-b.gutexberg-output",
+      "value": {
+        "expires": 3600000,
+        "uri": "amqp://guest:guest@localhost:5672/domain-a",
+        "exchange": "domain-a.gutexberg-output"
+      },
+      "vhost": "domain-b"
+    },
+    {
+      "component": "federation-upstream",
+      "name": "local.domain-a.domain-c.gutexberg-output",
+      "value": {
+        "expires": 3600000,
+        "uri": "amqp://guest:guest@localhost:5672/domain-a",
+        "exchange": "domain-a.gutexberg-output"
+      },
+      "vhost": "domain-c"
+    }
+  ],
+  "policies": [
+    {
+      "apply-to": "exchanges",
+      "definition": {
+        "federation-upstream": "rabbitmq-1.domain-x.gutexberg-input-1"
+      },
+      "name": "rabbitmq-1.domain-x.gutexberg-input-1.domain-a.gutexberg-input",
+      "pattern": "^domain-a.gutexberg-input$",
+      "priority": 0,
+      "vhost": "domain-a"
+    },
+    {
+      "apply-to": "exchanges",
+      "definition": {
+        "federation-upstream": "rabbitmq-1.domain-y.gutexberg-input-2"
+      },
+      "name": "rabbitmq-1.domain-y.gutexberg-input-2.domain-a.gutexberg-input",
+      "pattern": "^domain-a.gutexberg-input$",
+      "priority": 0,
+      "vhost": "domain-a"
+    },
+    {
+      "apply-to": "exchanges",
+      "definition": {
+        "federation-upstream": "rabbitmq-1.domain-z.gutexberg-input-3"
+      },
+      "name": "rabbitmq-1.domain-z.gutexberg-input-3.domain-a.gutexberg-input",
+      "pattern": "^domain-a.gutexberg-input$",
+      "priority": 0,
+      "vhost": "domain-a"
+    },
+    {
+      "apply-to": "exchanges",
+      "definition": {
+        "federation-upstream": "local.domain-a.domain-b.gutexberg-output"
+      },
+      "name": "domain-a.domain-b.gutexberg-output",
+      "pattern": "^domain-b.gutexberg-output$",
+      "priority": 0,
+      "vhost": "domain-b"
+    },
+    {
+      "apply-to": "exchanges",
+      "definition": {
+        "federation-upstream": "local.domain-a.domain-c.gutexberg-output"
+      },
+      "name": "domain-a.domain-c.gutexberg-output",
+      "pattern": "^domain-c.gutexberg-output$",
+      "priority": 0,
+      "vhost": "domain-c"
+    }
+  ],
+  "queues": [
+    {
+      "arguments": {
+        "x-queue-type": "quorum"
+      },
+      "auto_delete": false,
+      "durable": true,
+      "name": "domain-a.gutexberg-input",
+      "type": "quorum",
+      "vhost": "domain-a"
+    },
+    {
+      "arguments": {
+        "x-queue-type": "quorum"
+      },
+      "auto_delete": false,
+      "durable": true,
+      "name": "domain-b.gutexberg-output",
+      "type": "quorum",
+      "vhost": "domain-b"
+    },
+    {
+      "arguments": {
+        "x-queue-type": "quorum"
+      },
+      "auto_delete": false,
+      "durable": true,
+      "name": "domain-c.gutexberg-output",
+      "type": "quorum",
+      "vhost": "domain-c"
+    }
+  ],
+  "bindings": [
+    {
+      "arguments": {},
+      "destination": "domain-a.gutexberg-input",
+      "destination_type": "queue",
+      "routing_key": "com.helloprima.msg1",
+      "source": "domain-a.gutexberg-input",
+      "vhost": "domain-a"
+    },
+    {
+      "arguments": {},
+      "destination": "domain-b.gutexberg-output",
+      "destination_type": "queue",
+      "routing_key": "com.helloprima.msg1",
+      "source": "domain-b.gutexberg-output",
+      "vhost": "domain-b"
+    },
+    {
+      "arguments": {},
+      "destination": "domain-c.gutexberg-output",
+      "destination_type": "queue",
+      "routing_key": "com.helloprima.msg1",
+      "source": "domain-c.gutexberg-output",
+      "vhost": "domain-c"
+    }
+  ]
+}
