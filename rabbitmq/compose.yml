@@ -28,6 +28,8 @@ x-rabbitmq-base: &rabbitmq-base
     timeout: 10s
     start_period: 20s
     retries: 3
+  extra_hosts:
+    localhost.localdomain: 127.0.0.1
   restart: unless-stopped
 
 services:
