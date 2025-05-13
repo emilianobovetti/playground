@@ -9,7 +9,8 @@ defmodule Playground.Consumer do
       basic_deliver: 1,
       basic_publish: 1,
       basic_ack: 1,
-      amqp_msg: 1
+      amqp_msg: 1,
+      p_basic: 1
     ]
 
   require Logger
@@ -62,7 +63,18 @@ defmodule Playground.Consumer do
   def handle_info({basic_deliver(delivery_tag: tag, routing_key: key), msg}, %State{} = state) do
     # for reasons I need to explore if I just publish the `msg` as it is
     # the federated exchanges don't receive this message
-    amqp_msg(payload: payload) = msg
+    amqp_msg(props: props, payload: payload) = msg
+    p_basic(headers: headers) = props
+
+    delivery_count =
+      Enum.find_value(headers, fn
+        {"x-delivery-count", :long, dc} -> dc
+        _ -> nil
+      end)
+
+    if not is_nil(delivery_count) and delivery_count > 1 do
+      Logger.warn("delivery_count = #{delivery_count}")
+    end
 
     :ok =
       :amqp_channel.call(
