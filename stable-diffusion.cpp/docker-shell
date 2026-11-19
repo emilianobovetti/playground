@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+set -eux
+
+docker run --rm --init -it \
+  --gpus=all \
+  --volume="${HOME}/stable-diffusion.cpp:/home/ubuntu/stable-diffusion.cpp" \
+  --volume="${HOME}/Desktop/Qwen-Image-Edit-2511:/home/ubuntu/Qwen-Image-Edit-2511" \
+  --volume="${HOME}/Desktop/eretum-flyer:/home/ubuntu/eretum-flyer" \
+  --workdir=/home/ubuntu/stable-diffusion.cpp \
+  --env=LD_LIBRARY_PATH=/home/ubuntu/stable-diffusion.cpp/build/bin \
+  stable-diffusion.cpp \
+  bash

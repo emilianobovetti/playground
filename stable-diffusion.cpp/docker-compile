@@ -1,0 +1,40 @@
+#!/usr/bin/env sh
+
+set -xeu
+
+docker build \
+  --file=Dockerfile \
+  --tag=stable-diffusion.cpp \
+  ~/stable-diffusion.cpp
+
+docker run --rm --init -it \
+  --gpus=all \
+  --volume="${HOME}/stable-diffusion.cpp:/home/ubuntu/stable-diffusion.cpp" \
+  --workdir=/home/ubuntu/stable-diffusion.cpp \
+  stable-diffusion.cpp \
+  cmake . \
+  -G Ninja \
+  -B build \
+  -S /home/ubuntu/stable-diffusion.cpp \
+  --fresh \
+  -DSD_CUDA=ON \
+  -DGGML_CUDA=ON \
+  -DGGML_NATIVE=OFF \
+  -DSD_BUILD_SHARED_GGML_LIB=ON \
+  -DSD_BUILD_SHARED_LIBS=ON \
+  -DGGML_BACKEND_DL=ON \
+  -DGGML_CPU_ALL_VARIANTS=ON \
+  -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
+  -DCMAKE_CUDA_ARCHITECTURES='61;70;75;80;86;89;90;100;120' \
+  -DCMAKE_CUDA_FLAGS='-Xcudafe \"--diag_suppress=177\" -Xcudafe \"--diag_suppress=550\"' \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=/usr \
+  -DSD_USE_SYSTEM_WEBP=ON \
+  -DSD_USE_SYSTEM_WEBM=OFF
+
+docker run --rm --init -it \
+  --gpus=all \
+  --volume="${HOME}/stable-diffusion.cpp:/home/ubuntu/stable-diffusion.cpp" \
+  --workdir=/home/ubuntu/stable-diffusion.cpp \
+  stable-diffusion.cpp \
+  cmake --build build --config Release -j9

@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+
+cmake . \
+  -G Ninja \
+  -B build \
+  -S ~/stable-diffusion.cpp \
+  --fresh \
+  -DSD_CUDA=ON \
+  -DGGML_CUDA=ON \
+  -DCMAKE_CUDA_ARCHITECTURES='61;70;75;80;86;89;90;100;120' \
+  -DCMAKE_CUDA_FLAGS='-Xcudafe \"--diag_suppress=177\" -Xcudafe \"--diag_suppress=550\"' \
+  -DGGML_NATIVE=OFF \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=/usr \
+  -DSD_USE_SYSTEM_WEBP=ON \
+  -DSD_USE_SYSTEM_WEBM=OFF \
+  -DSD_BUILD_SHARED_LIBS=ON \
+  -DSD_BUILD_SHARED_GGML_LIB=ON \
+  -DGGML_BACKEND_DL=ON \
+  -DGGML_CPU_ALL_VARIANTS=ON \
+  -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
+
+cmake --build build --config Release -j9

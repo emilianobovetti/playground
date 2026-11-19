@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+
+set -xeu
+
+  #--llm qwen_2.5_vl_7b_fp8_scaled.safetensors \
+  #--backend te=cpu,diffusion=cuda0,vae=cuda0 \
+  #--backend te=cuda0,diffusion=cuda0,vae=cuda0 \
+
+exec ~/stable-diffusion.cpp/build/bin/sd-cli \
+  --backend cuda0 \
+  --diffusion-model qwen-image-edit-2511-Q3_K_M.gguf \
+  --vae qwen_image_vae.safetensors \
+  --llm qwen_2.5_vl_7b.safetensors \
+  --cfg-scale 2.5 \
+  --sampling-method euler \
+  --params-backend cpu \
+  --offload-to-cpu \
+  --stream-layers \
+  --max-vram -1 \
+  --diffusion-fa \
+  --flow-shift 3 \
+  --model-args qwen_image_zero_cond_t=true \
+  -v \
+  -r "/home/emiliano/Desktop/eretum-flyer/WhatsApp Image 2026-07-07 at 20.55.08.jpeg" \
+  -p "improve image quality"

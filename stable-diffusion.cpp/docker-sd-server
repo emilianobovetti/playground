@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+
+set -eux
+
+docker run --rm --init -it \
+  --gpus=all \
+  --volume="${HOME}/stable-diffusion.cpp:/home/ubuntu/stable-diffusion.cpp" \
+  --volume="${HOME}/Desktop/Qwen-Image-Edit-2511:/home/ubuntu/Qwen-Image-Edit-2511" \
+  --volume="${HOME}/Desktop/eretum-flyer:/home/ubuntu/eretum-flyer" \
+  --workdir=/home/ubuntu/eretum-flyer \
+  --publish=1234:1234 \
+  --env=LD_LIBRARY_PATH=/home/ubuntu/stable-diffusion.cpp/build/bin \
+  stable-diffusion.cpp \
+  /home/ubuntu/stable-diffusion.cpp/build/bin/sd-server \
+  --diffusion-model /home/ubuntu/Qwen-Image-Edit-2511/qwen-image-edit-2511-Q5_K_M.gguf \
+  --vae /home/ubuntu/Qwen-Image-Edit-2511/qwen_image_vae.safetensors \
+  --llm /home/ubuntu/Qwen-Image-Edit-2511/Qwen2.5-VL-7B-Instruct.Q8_0.gguf \
+  --backend te=cuda0,diffusion=cuda0,vae=cpu \
+  --params-backend cpu \
+  --offload-to-cpu \
+  --stream-layers \
+  --diffusion-fa \
+  --cfg-scale 2.5 \
+  --sampling-method euler \
+  --max-vram 11.5 \
+  --flow-shift 3 \
+  --model-args qwen_image_zero_cond_t=true \
+  --eager-load \
+  --listen-ip 0.0.0.0 \
+  --listen-port 1234 \
+  -v

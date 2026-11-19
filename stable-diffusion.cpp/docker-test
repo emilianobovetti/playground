@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+set -eux
+
+docker run --rm --init -it \
+  --gpus=all \
+  stable-diffusion.cpp \
+  sleep infinity

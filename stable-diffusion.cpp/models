@@ -1,0 +1,10 @@
+Qwen2.5-VL-7B-Instruct.Q5_K_M.gguf
+Qwen2.5-VL-7B-Instruct.Q8_0.gguf
+Qwen2.5-VL-7B-Instruct.mmproj-Q8_0.gguf
+Qwen2.5-VL-7B-Instruct.mmproj-f16.gguf
+qwen-image-edit-2511-Q3_K_M.gguf
+qwen-image-edit-2511-Q4_K_M.gguf
+qwen-image-edit-2511-Q5_K_M.gguf
+qwen_2.5_vl_7b.safetensors
+qwen_2.5_vl_7b_fp8_scaled.safetensors
+qwen_image_vae.safetensors
